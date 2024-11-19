@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroceryGo-API", "GroceryGo-API\GroceryGo-API.csproj", "{128933FA-8CA3-4F0F-A033-CBB237579731}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{128933FA-8CA3-4F0F-A033-CBB237579731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{128933FA-8CA3-4F0F-A033-CBB237579731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{128933FA-8CA3-4F0F-A033-CBB237579731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{128933FA-8CA3-4F0F-A033-CBB237579731}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8D610E7C-F9DE-47C5-8938-A627A9C757A4}
+	EndGlobalSection
+EndGlobal

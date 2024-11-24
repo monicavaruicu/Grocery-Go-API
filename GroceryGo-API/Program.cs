@@ -1,4 +1,3 @@
-using api.Models;
 using GroceryGo_API.Data;
 using GroceryGo_API.Repositories.Implementation;
 using GroceryGo_API.Repositories.Interface;
@@ -8,6 +7,8 @@ using GroceryGo_API.Services.Implementation;
 using GroceryGo_API.Services.Interface;
 using GroceryGo_API.Utils.Security;
 using Microsoft.EntityFrameworkCore;
+using Shop_API.BusinessLogic.Implementation;
+using Shop_API.Repository.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,9 @@ builder.Services.AddControllers();
 
 builder.Services.Configure<ConfigSettings>(options => builder.Configuration.GetSection("ConfigSettings").Bind(options));
 
+builder.Services.AddAutoMapper(typeof(ProductMappingProfile));
 builder.Services.AddScoped<PasswordHasher>();
+
 builder.Services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
@@ -27,6 +30,12 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 builder.Services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
 builder.Services.AddScoped<ISubcategoryService, SubcategoryService>();
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
+builder.Services.AddScoped<IProviderService, ProviderService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

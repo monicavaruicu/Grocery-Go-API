@@ -13,5 +13,7 @@ namespace GroceryGo_API.Data
         public DbSet<User> User { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<Subcategory> Subcategory { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<Provider> Provider { get; set; }
     }
 }

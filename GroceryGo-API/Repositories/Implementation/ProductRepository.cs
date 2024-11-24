@@ -1,27 +1,28 @@
 ﻿using api.Repositories.Implementations;
+using AutoMapper;
 using GroceryGo_API.Data;
 using GroceryGo_API.DTOs;
 using GroceryGo_API.Entities;
+using GroceryGo_API.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
-using Shop_API.Models.Product;
-using Shop_API.Repository.Interface;
 using System.Data;
 
-namespace Shop_API.Repository.Implementation
+namespace GroceryGo_API.Repositories.Implementation
 {
-    public class ProductRepository(IConfiguration configuration, ApplicationDbContext dbContext) : BaseRepository(configuration), IProductRepository
+    public class ProductRepository(IConfiguration configuration, ApplicationDbContext dbContext, IMapper mapper) : BaseRepository(configuration), IProductRepository
     {
         public required ApplicationDbContext DbContext { get; set; } = dbContext;
+        public required IMapper Mapper { get; set; } = mapper;
 
         public async Task<List<Category>> GetCategoriesAsync()
         {
-           return await DbContext.Category.ToListAsync();
+            return await DbContext.Category.ToListAsync();
         }
 
-        //public async Task<List<Product>> GetProductsAsync(ProductRequestDTO productRequestDTO)
-        //{
-        //    return await DbContext.Category.ToListAsync();
-        //}
+        public async Task<List<Product>> GetProductsAsync(int subcategoryId)
+        {
+            return await DbContext.Product.Where(p => p.SubcategoryId == subcategoryId).ToListAsync();
+        }
 
         //public async Task<List<CategoryModel>> GetSubCategoriesAsync(int categroyId)
         //{
@@ -36,95 +37,69 @@ namespace Shop_API.Repository.Implementation
         //    }
         //}
 
-        //public async Task SaveProductsAsync(SaveProductRequest request)
-        //{
-        //    using (var connection = ConnectionFactory(_configuration))
-        //    {
-        //        await connection.ExecuteAsync(SaveProductSP,
-        //        param: new
-        //        {
-        //            request.Name,
-        //            request.Description,
-        //            request.Price,
-        //            request.IsAvailable,
-        //            request.SubCategoryId,
-        //            request.ProviderId,
-        //            request.Picture
-        //        },
-        //        commandType: CommandType.StoredProcedure);
-        //    }
-        //}
+        public async Task SaveProductAsync(ProductCreateDTO productCreateDTO)
+        {
+            var product = new Product
+            {
+                Name = productCreateDTO.Name,
+                Description = productCreateDTO.Description,
+                Price = productCreateDTO.Price,
+                IsAvailable = productCreateDTO.IsAvailable,
+                SubcategoryId = productCreateDTO.SubcategoryId,
+                ProviderId = productCreateDTO.ProviderId,
+                Picture = productCreateDTO.Picture
+            };
 
-        //public async Task UpdateProductsAsync(ProductModel request)
-        //{
-        //    using (var connection = ConnectionFactory(_configuration))
-        //    {
-        //        await connection.ExecuteAsync(UpdateProductSP,
-        //        param: new
-        //        {
-        //            request.Id,
-        //            request.Name,
-        //            request.Description,
-        //            request.Price,
-        //            request.IsAvailable,
-        //            request.SubCategoryId,
-        //            request.ProviderId,
-        //            request.Picture
-        //        },
-        //        commandType: CommandType.StoredProcedure);
-        //    }
-        //}
+            await DbContext.AddAsync(product);
+            await DbContext.SaveChangesAsync();
+        }
 
-        //public async Task DeleteProductsAsync(int productId)
-        //{
-        //    using (var connection = ConnectionFactory(_configuration))
-        //    {
-        //        await connection.ExecuteAsync(DeleteProductSP,
-        //        param: new
-        //        {
-        //            productId
-        //        },
-        //        commandType: CommandType.StoredProcedure);
-        //    }
-        //}
 
-        //public async Task<ProductModel> GetProductByIdAsync(int productId)
-        //{
-        //    using (var connection = ConnectionFactory(_configuration))
-        //    {
-        //        return (await connection.QueryFirstOrDefaultAsync<ProductModel>(GetProductSP,
-        //            param: new
-        //            {
-        //                productId
-        //            },
-        //            commandType: CommandType.StoredProcedure));
-        //    }
-        //}
+        public async Task UpdateProductAsync(ProductDTO productDTO)
+        {
+            var product = await DbContext.Product.FirstOrDefaultAsync(p => p.Id == productDTO.Id) ?? throw new KeyNotFoundException();
+            Mapper.Map(productDTO, product);
 
-        //public async Task<CategoryModel> GetCategoryBySubcategory(int subCategoryId)
-        //{
-        //    using (var connection = ConnectionFactory(_configuration))
-        //    {
-        //        return (await connection.QueryFirstOrDefaultAsync<CategoryModel>(GetCategoryBySubcategorySP,
-        //            param: new
-        //            {
-        //                subCategoryId
-        //            },
-        //            commandType: CommandType.StoredProcedure));
-        //    }
-        //}
+            await DbContext.SaveChangesAsync();
+        }
 
-        //public async Task<SubcategoryModel> GetSubcategoryById(int subCategoryId)
-        //{
-        //    using (var connection = ConnectionFactory(_configuration))
-        //    {
-        //        return (await connection.QueryFirstOrDefaultAsync<SubcategoryModel>(GetSubcategoryByIdSP,
-        //            param: new
-        //            {
-        //                subCategoryId
-        //            },
-        //            commandType: CommandType.StoredProcedure));
-        //    }
-        //}
+        public async Task DeleteProductAsync(int productId)
+        {
+            var product = await DbContext.Product.FirstOrDefaultAsync(p => p.Id == productId) ?? throw new KeyNotFoundException();
+
+            DbContext.Product.Remove(product);
+            await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<Product> GetProductByIdAsync(int productId)
+        {
+            return await DbContext.Product.FindAsync(productId) ?? throw new KeyNotFoundException();
+        }
     }
+
+    //public async Task<CategoryModel> GetCategoryBySubcategory(int subCategoryId)
+    //{
+    //    using (var connection = ConnectionFactory(_configuration))
+    //    {
+    //        return (await connection.QueryFirstOrDefaultAsync<CategoryModel>(GetCategoryBySubcategorySP,
+    //            param: new
+    //            {
+    //                subCategoryId
+    //            },
+    //            commandType: CommandType.StoredProcedure));
+    //    }
+    //}
+
+    //public async Task<SubcategoryModel> GetSubcategoryById(int subCategoryId)
+    //{
+    //    using (var connection = ConnectionFactory(_configuration))
+    //    {
+    //        return (await connection.QueryFirstOrDefaultAsync<SubcategoryModel>(GetSubcategoryByIdSP,
+    //            param: new
+    //            {
+    //                subCategoryId
+    //            },
+    //            commandType: CommandType.StoredProcedure));
+    //    }
+    //}
 }

@@ -1,7 +1,6 @@
 ﻿using GroceryGo_API.Entities;
 using GroceryGo_API.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Shop_API.Models.Product;
 
 namespace GroceryGo_API.Controllers
 {

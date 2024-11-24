@@ -1,5 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using api.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
@@ -8,6 +7,7 @@ using GroceryGo_API.Repository.Interface;
 using GroceryGo_API.DTOs;
 using GroceryGo_API.Entities;
 using Microsoft.Extensions.Options;
+using GroceryGo_API.Data;
 
 namespace GroceryGo_API.Services.Implementation
 {

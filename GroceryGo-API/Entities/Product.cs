@@ -2,13 +2,13 @@
 {
     public class Product
     {
-        public required int Id { get; set; }
-        public required string Name { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
         public string? Description { get; set; }
-        public required int Price { get; set; }
-        public required bool IsAvailable { get; set; }
-        public required int SubCategoryId { get; set; }
-        public required int ProviderId { get; set; }
+        public int Price { get; set; }
+        public bool IsAvailable { get; set; }
+        public int SubcategoryId { get; set; }
+        public int ProviderId { get; set; }
         public string? Picture { get; set; }
     }
 }

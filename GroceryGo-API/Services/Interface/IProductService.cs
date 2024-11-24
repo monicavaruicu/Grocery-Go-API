@@ -1,17 +1,18 @@
-﻿using GroceryGo_API.Entities;
+﻿using GroceryGo_API.DTOs;
+using GroceryGo_API.Entities;
 
 namespace GroceryGo_API.Services.Interface
 {
     public interface IProductService
     {
-        //Task DeleteProductsAsync(int productId);
         Task<List<Category>> GetCategoriesAsync();
         //Task<CategoryModel> GetCategoryBySubcategory(int subCategoryId);
-        //Task<ProductModel> GetProductByIdAsync(int productId);
-        //Task<List<ProductModel>> GetProductsAsync(GetProductModelRequest request);
+        Task<Product> GetProductByIdAsync(int productId);
+        Task<List<Product>> GetProductsAsync(int subcategoryId);
         //Task<List<CategoryModel>> GetSubCategoriesAsync(int categroyId);
         //Task<SubcategoryModel> GetSubcategoryById(int subCategoryId);
-        //Task SaveProductsAsync(SaveProductRequest request);
-        //Task UpdateProductsAsync(ProductModel request);
+        Task SaveProductAsync(ProductCreateDTO productCreateDTO);
+        Task UpdateProductAsync(ProductDTO productDTO);
+        Task DeleteProductAsync(int productId);
     }
 }

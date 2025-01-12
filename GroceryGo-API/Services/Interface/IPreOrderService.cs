@@ -1,10 +1,13 @@
-﻿//using Shop_API.Models.Product;
+﻿using GroceryGo_API.DTOs;
+using GroceryGo_API.Entities;
 
-//namespace Shop_API.BusinessLogic.Interface
-//{
-//    public interface IPreOrderBL
-//    {
-//        Task<List<ProductModel>> GetPreorderByUserAsync(int userId);
-//        Task SavePreOrder(int userId, int productId);
-//    }
-//}
+namespace GroceryGo_API.Services.Interface
+{
+    public interface IPreOrderService
+    {
+        Task DeleteFromPreOrder(PreOrderDTO model);
+        Task DeletePreOrder(int userId);
+        Task<List<Product>> GetPreOrderByUserAsync(int userId);
+        Task AddToPreOrder(PreOrderDTO model);
+    }
+}

@@ -1,4 +1,5 @@
-﻿using GroceryGo_API.Entities;
+﻿using GroceryGo_API.DTOs;
+using GroceryGo_API.Entities;
 using GroceryGo_API.Services.Implementation;
 using GroceryGo_API.Services.Interface;
 using Microsoft.AspNetCore.Http;
@@ -17,10 +18,23 @@ namespace GroceryGo_API.Controllers
             this.SubcategoryService = subcategoryService;
         }
 
-        [HttpGet("get-all-by-category-id")]
+        [HttpGet("get-all")]
         public async Task<IEnumerable<Subcategory>> GetCategoriesAsync([FromQuery] int categoryId)
         {
             return await SubcategoryService.GetAllSubcategoriesByCategoryIdAsync(categoryId);
+        }
+
+        [HttpPost("add-subcategory")]
+        public async Task<IActionResult> AddSubcategoryAsync([FromBody] SubcategoryDTO model)
+        {
+            var categoryId = await SubcategoryService.AddSubcategoryAsync(model);
+
+            if (categoryId > 0)
+            {
+                return Ok(new { Id = categoryId });
+            }
+
+            return BadRequest();
         }
     }
 }

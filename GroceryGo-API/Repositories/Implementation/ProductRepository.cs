@@ -44,7 +44,7 @@ namespace GroceryGo_API.Repositories.Implementation
                 Name = productCreateDTO.Name,
                 Description = productCreateDTO.Description,
                 Price = productCreateDTO.Price,
-                IsAvailable = productCreateDTO.IsAvailable,
+                Stock = productCreateDTO.Stock,
                 SubcategoryId = productCreateDTO.SubcategoryId,
                 ProviderId = productCreateDTO.ProviderId,
                 Picture = productCreateDTO.Picture

@@ -1,4 +1,5 @@
-﻿using GroceryGo_API.Entities;
+﻿using GroceryGo_API.DTOs;
+using GroceryGo_API.Entities;
 using GroceryGo_API.Repository.Interface;
 using GroceryGo_API.Services.Interface;
 
@@ -13,9 +14,14 @@ namespace GroceryGo_API.Services.Implementation
             this.CategoryRepository = categoryRepository;
         }
 
-        public async Task<List<Category>> GetCategoriesAsync()
+        public async Task<IEnumerable<Category>> GetCategoriesAsync()
         {
             return await CategoryRepository.GetCategoriesAsync();
+        }
+
+        public async Task<int> AddCategoryAsync(CategoryDTO model)
+        {
+            return await CategoryRepository.AddCategoryAsync(model);
         }
     }
 }

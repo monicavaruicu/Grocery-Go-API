@@ -1,46 +1,69 @@
-﻿//using api.Repositories.Implementations;
-//using Azure.Core;
-//using Dapper;
-//using Shop_API.Models.Product;
-//using Shop_API.Repository.Interface;
-//using System.Data;
+﻿using api.Repositories.Implementations;
+using GroceryGo_API.Data;
+using GroceryGo_API.DTOs;
+using GroceryGo_API.Entities;
+using GroceryGo_API.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
-//namespace Shop_API.Repository.Implementation
-//{
-//    public class PreOrderRepository : BaseRepository, IPreOrderRepository
-//    {
-//        private const string GetPreorderByUserSP = "PreOrder_GetPreorderByUser";
-//        private const string SavePreorderSP = "PreOrder_SavePreOrder";
+namespace GroceryGo_API.Repositories.Implementation
+{
+    public class PreOrderRepository(IConfiguration configuration, ApplicationDbContext dbContext) : BaseRepository(configuration), IPreOrderRepository
+    {
+        public required ApplicationDbContext DbContext { get; set; } = dbContext;
 
-//        public PreOrderRepository(IConfiguration configuration) : base(configuration)
-//        {
-//        }
+        public async Task DeleteFromPreOrder(PreOrderDTO model)
+        {
+            var cartItem = await DbContext.PreOrder.FirstOrDefaultAsync(ci => ci.UserId == model.UserId && ci.ProductId == model.ProductId) ?? throw new KeyNotFoundException();
 
-//        public async Task<List<ProductModel>> GetPreorderByUserAsync(int userId)
-//        {
-//            using (var connection = ConnectionFactory(_configuration))
-//            {
-//                return (await connection.QueryAsync<ProductModel>(GetPreorderByUserSP,
-//                    param: new
-//                    {
-//                        userId
-//                    },
-//                    commandType: CommandType.StoredProcedure)).ToList();
-//            }
-//        }
+            DbContext.PreOrder.Remove(cartItem);
+            await DbContext.SaveChangesAsync();
+        }
 
-//        public async Task SavePreOrder(int userId, int productId)
-//        {
-//            using (var connection = ConnectionFactory(_configuration))
-//            {
-//                await connection.ExecuteAsync(SavePreorderSP,
-//                param: new
-//                {
-//                    userId, 
-//                    productId
-//                },
-//                commandType: CommandType.StoredProcedure);
-//            }
-//        }
-//    }
-//}
+        public async Task DeletePreOrder(int userId)
+        {
+            var preOrders = await DbContext.PreOrder
+                .Where(po => po.UserId == userId)
+                .ToListAsync();
+
+            DbContext.PreOrder.RemoveRange(preOrders);
+            await DbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Product>> GetPreOrderByUserAsync(int userId)
+        {
+            var cartItemsIds = await DbContext.PreOrder
+                .Where(f => f.UserId == userId)
+                .Select(f => f.ProductId)
+                .ToListAsync();
+
+            var cartProducts = new List<Product>();
+
+            foreach (var id in cartItemsIds)
+            {
+                var product = await DbContext.Product
+                    .Where(p => p.Id == id)
+                    .FirstOrDefaultAsync();
+
+                if (product != null)
+                {
+                    cartProducts.Add(product);
+                }
+            }
+
+            return cartProducts;
+        }
+
+        public async Task AddToPreOrder(PreOrderDTO model)
+        {
+            var cartItem = new PreOrder
+            {
+                UserId = model.UserId,
+                ProductId = model.ProductId,
+            };
+
+            await DbContext.AddAsync(cartItem);
+            await DbContext.SaveChangesAsync();
+        }
+    }
+}
